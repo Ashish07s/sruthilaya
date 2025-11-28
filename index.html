@@ -1,78 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SruthiLaya Enquiry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sruthilaya — Enquiry Form</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Reset & Body */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #faf9f7; color: #333; line-height: 1.6; }
+
+        /* Layout */
+        .wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* ⭐ Centered Header Strip - STYLED FOR INSIDE FORM ⭐ */
+        .header-center { 
+            text-align: center; 
+            margin-bottom: 25px;
+        }
+        .header-center img { 
+            height: 100px; 
+            margin-bottom: 5px;
+        }
+        .header-center h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #b48c3b;
+            font-weight: 700;
+        }
+        
+        /* Two-Column Grid */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr; 
+            gap: 30px;
+        }
+
+        /* Left Card (Hero) - GRAPHIC AREA */
+        .hero {
+            background-color: #dff7f2; 
+            border-radius: 20px;
+            min-height: 650px; 
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        /* ⭐ Ensures the image fills the 100% of the container, cropping as needed (object-fit: cover) ⭐ */
+        .hero img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            border-radius: 20px;
+        }
+
+
+        /* Right Card (Form Container) */
+        .form-container {
+            background: #e7faf5;
+            border-radius: 20px;
+            padding: 30px 35px;
+        }
+        
+        /* Form Fields (Keeping the floating label styles) */
+        form .input-group { position: relative; margin-bottom: 22px; }
+        form input, form textarea, form select { 
+            width: 100%; padding: 14px 14px; border-radius: 10px; border: 1px solid #c7e6df;
+            background: white; font-size: 15px; font-family: 'Poppins', sans-serif; outline: none;
+            appearance: none;
+        }
+        form textarea { height: 110px; resize: none; }
+        
+        form label {
+            position: absolute; left: 14px; top: 14px; font-size: 14px; color: #666;
+            transition: 0.25s ease; pointer-events: none;
+        }
+
+        /* Floating label trigger styles */
+        input:focus + label, textarea:focus + label, input:not(:placeholder-shown):valid + label,
+        textarea:not(:placeholder-shown):valid + label, select:valid + label {
+            top: -10px; left: 10px; background: #e7faf5; padding: 0 6px; font-size: 12px; color: #b48c3b;
+        }
+        
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '▼'; position: absolute; right: 15px; top: 50%;
+            transform: translateY(-50%); font-size: 10px; color: #b48c3b; pointer-events: none;
+        }
+
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+
+        /* Feedback Checkbox Group Styling */
+        .feedback-group { margin-bottom: 25px; }
+        .feedback-group > label {
+            position: static; display: block; margin-bottom: 8px; font-weight: 500; color: #2c3a3a;
+        }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 6px; font-size: 14px; }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px; height: 18px; margin-right: 8px; cursor: pointer; border-color: #c7e6df; min-width: 18px; 
+        }
+        #othersInput { margin-left: 0; margin-top: 8px; }
+
+        /* Button & Footer Note */
+        button {
+            width: 100%; padding: 14px; background: #b48c3b; border: none; border-radius: 10px;
+            color: white; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.3s;
+        }
+        button:hover { background: #a37c30; }
+
+        .note { font-size: 12px; margin-top: 12px; color: #555; text-align: center; }
+        .success-msg {
+            display: none; padding: 15px; background: #4CAF50; color: white; border-radius: 10px;
+            text-align: center; font-weight: 500; margin-top: 15px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 20px; }
+            .hero { min-height: 250px; }
+            .header-center h1 { font-size: 20px; }
+        }
+        @media (max-width: 600px) {
+            .form-container { padding: 25px 20px; }
+            .row { flex-direction: column; gap: 0; } 
+        }
+    </style>
 </head>
+
 <body>
-  <div class="wrapper">
-    <div class="form-card">
-      <img src="logo.png" alt="SruthiLaya Logo" class="logo">
-      <center><h1 class="form-title">Enquiry Form</h1></center>
+<div class="wrapper">
+    
+    <div class="layout">
 
-      <form id="leadForm" autocomplete="on" novalidate>
-        <div class="field-block">
-          <label for="name">Name*</label>
-          <input type="text" id="name" name="name" class="input-field" required placeholder="">
-        </div>
+        <section class="hero">
+            <img src="left.png" alt="Beautiful Sruthilaya Jewellery" />
+        </section>
 
-        <div class="field-block">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="input-field" placeholder="">
-        </div>
+        <section class="form-container">
 
-        <div class="field-block">
-          <label for="country">Country / Region</label>
-          <select id="country" name="country" class="input-field" required>
-            <option value="" hidden>Select Country</option>
-            <option value="India">India</option>
-            <option value="USA">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="Italy">Italy</option>
-            <option value="Spain">Spain</option>
-            <option value="Netherlands">Netherlands</option>
-            <option value="Sweden">Sweden</option>
-            <option value="Canada">Canada</option>
-            <option value="Australia">Australia</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+            <form id="leadForm">
+                <div class="header-center">
+                    <img src="logo.png" alt="Sruthilaya Logo" />
+                    <h1>Your Voice Shapes Sruthilaya — Tell Us More</h1>
+                </div>
+        
+                
+                <div class="input-group">
+                    <input id="name" name="name" type="text" required placeholder=" ">
+                    <label for="name">Full Name*</label>
+                </div>
 
-        <div class="field-block">
-          <label for="phone">Phone*</label>
-          <input type="tel" id="phone" name="phone" class="input-field" required placeholder="">
-        </div>
+                <div class="row">
+                    <div class="col input-group">
+                        <input id="email" name="email" type="email" required placeholder=" ">
+                        <label for="email">Email*</label>
+                    </div>
 
-        <div class="field-block">
-          <label for="subject">Product Interest</label>
-          <select id="subject" name="subject" class="input-field" required>
-            <option value="" hidden>Select Product Interest</option>
-            <option value="Bracelet">Bracelet</option>
-            <option value="Ring">Rings</option>
-            <option value="Necklace">Necklaces</option>
-            <option value="Earrings">Earrings</option>
-            <option value="Custom">Custom Design</option>
-          </select>
-        </div>
+                    <div class="col input-group select-wrapper">
+                        <select id="country" name="country" required>
+                            <option value="" hidden></option> 
+                            <option value="India">India</option>
+                            <option value="USA">United States</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Europe">Europe</option>
+                            <option value="UAE">UAE</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <label for="country">Country / Region*</label>
+                    </div>
+                </div>
 
-        <div class="field-block">
-          <label for="message">Your Requirement / Feedback</label>
-          <textarea id="message" name="message" class="input-field" placeholder=""></textarea>
-        </div>
+                <div class="row">
+                    <div class="col input-group">
+                        <input id="phone" name="phone" type="tel" required placeholder=" ">
+                        <label for="phone">Phone Number*</label>
+                    </div>
 
-        <button id="submitBtn" type="submit">Submit</button>
+                    <div class="col input-group select-wrapper">
+                        <select id="subject" name="subject" required>
+                            <option value="" hidden></option> 
+                            <option value="Bracelet">Bracelet</option>
+                            <option value="Ring">Rings</option>
+                            <option value="Necklace">Necklaces</option>
+                            <option value="Earrings">Earrings</option>
+                            <option value="Custom">Custom Design</option>
+                        </select>
+                        <label for="subject">Product Interest*</label>
+                    </div>
+                </div>
 
-        <p id="successMsg" class="success-msg">Thank you! We will contact you soon.</p>
-        <p class="note">By submitting, you agree to share these details with Sruthilaya Fine Jewellery.</p>
-      </form>
+                <div class="feedback-group">
+                    <label>Your Feedback (Optional)</label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="feedback" value="The gemstones are stunning!"> 
+                        <span class="feedback-text">The gemstones are stunning!</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="feedback" value="The designs feel truly meaningful."> 
+                        <span class="feedback-text">The designs feel truly meaningful.</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="feedback" value="Impressed by the level of craftsmanship."> 
+                        <span class="feedback-text">Impressed by the level of craftsmanship.</span>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="othersCheck" name="feedback" value="Others"> 
+                        <span class="feedback-text">Others:</span>
+                    </div>
+                    <input type="text" id="othersInput" name="others_text" placeholder="Write your feedback..." style="display:none;">
+                </div>
+
+                <div class="input-group">
+                    <textarea id="message" name="message" required placeholder=" "></textarea>
+                    <label for="message">Your Requirement / Additional Message*</label>
+                </div>
+
+                <button id="submitBtn" type="submit">Submit Enquiry</button>
+                <p id="successMsg" class="success-msg">✅ Thank you! Your enquiry has been sent. We will contact you soon.</p>
+                <p class="note">By submitting, you agree to share these details with Sruthilaya Fine Jewellery.</p>
+            </form>
+        </section>
+
     </div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMsg');
+        const othersCheck = document.getElementById('othersCheck');
+        const othersInput = document.getElementById('othersInput');
+
+        // 1. Others Checkbox Toggle Logic
+        othersCheck.addEventListener('change', function() {
+            if (this.checked) {
+                othersInput.style.display = 'block';
+                othersInput.focus();
+            } else {
+                othersInput.style.display = 'none';
+                othersInput.value = ''; 
+            }
+        });
+
+        // 2. Form Submission Logic
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); 
+
+            if (!form.checkValidity()) {
+                alert("Please fill out all required fields correctly.");
+                return; 
+            }
+
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+            
+            // --- SIMULATE FORM SUBMISSION ---
+            setTimeout(() => {
+                submitBtn.textContent = 'Submitted!';
+                submitBtn.style.backgroundColor = '#4CAF50';
+                form.style.display = 'none'; 
+                successMsg.style.display = 'block'; 
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            }, 1500); 
+        });
+    });
+</script>
 </body>
 </html>
