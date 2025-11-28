@@ -1,171 +1,198 @@
-:root {
-  --gold: #c6a559;
-  --gold-dark: #a17f2a;
-  --text: #3e3e3e;
-  --muted: #6b7a8f; /* blue-gray text */
-  --card-bg: #f9fafc; /* light blue card */
-  --bg: #e6eef7; /* soft pale blue background */
-  --border: #c3cfe2;
+/* General Reset & Body */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; background: #faf9f7; color: #333; line-height: 1.6; }
+
+/* Layout */
+.wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.header-center { text-align: center; margin-bottom: 25px; }
+.header-center img { height: 100px; margin-bottom: 5px; }
+.header-center h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; color: #b48c3b; font-weight: 700;
 }
 
-/* Global Styles */
-* {
-  box-sizing: border-box;
+/* Grid Layout */
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr; 
+    gap: 30px;
 }
 
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+/* Hero Section */
+.hero {
+    background-color: #dff7f2; 
+    border-radius: 20px;
+    min-height: 650px; 
+    position: relative;
+    overflow: hidden;
+}
+.hero img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover; border-radius: 20px;
 }
 
-.wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+/* Form Container */
+.form-container {
+    background: #e7faf5;
+    border-radius: 20px;
+    padding: 30px 35px;
 }
 
-.form-card {
-  background: var(--card-bg);
-  width: 100%;
-  max-width: 770px;
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 35px rgba(99, 122, 181, 0.15);
-  border: 1.5px solid var(--border);
+/* Input Fields (Floating Label Group) */
+form .input-group { position: relative; margin-bottom: 22px; }
+
+form input, form textarea, form select { 
+    width: 100%; padding: 14px 14px; border-radius: 10px; border: 1px solid #c7e6df;
+    background: white; font-size: 15px; font-family: 'Poppins', sans-serif; outline: none;
+    appearance: none;
+}
+form textarea { height: 110px; resize: none; }
+
+/* Specific selector for Floating Labels to ignore checkboxes */
+.input-group label {
+    position: absolute; left: 14px; top: 14px; font-size: 14px; color: #666;
+    transition: 0.25s ease; pointer-events: none;
 }
 
-.logo {
-  width: 160px;
-  display: block;
-  margin: 0 auto 25px;
+/* Floating Label Action - Updated to remove :valid from inputs/textareas that are now optional */
+input:focus + label, textarea:focus + label, 
+select:focus + label, /* Added select:focus + label for optional select */
+input:not(:placeholder-shown) + label, /* Changed to only require not(:placeholder-shown) for optional fields */
+textarea:not(:placeholder-shown) + label, /* Changed to only require not(:placeholder-shown) for optional fields */
+select:valid + label { /* Kept :valid for country selection since it's still required */
+    top: -10px; left: 10px; background: #e7faf5; padding: 0 6px; font-size: 12px; color: #b48c3b;
 }
 
-.form-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  margin-bottom: 30px;
-  color: var(--gold-dark);
+/* Select Arrow */
+.select-wrapper { position: relative; }
+.select-wrapper::after {
+    content: '▼'; position: absolute; right: 15px; top: 50%;
+    transform: translateY(-50%); font-size: 10px; color: #b48c3b; pointer-events: none;
 }
 
-.field-block {
-  margin-bottom: 22px;
-  text-align: left;
+.row { display: flex; gap: 15px; }
+.col { flex: 1; }
+
+/* --- FEEDBACK SECTION STYLES (Dropdown Trigger) --- (NO CHANGES HERE) */
+.feedback-group { margin-bottom: 25px; position: relative; }
+
+.feedback-main-label {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 14px; border-radius: 10px; border: 1px solid #c7e6df;
+    background: white; font-size: 15px; font-weight: 500; color: #666;
+    cursor: pointer; margin-bottom: 10px; transition: background 0.3s;
+}
+.feedback-main-label:hover { background: #f0f8f7; }
+.feedback-main-label .arrow {
+    margin-left: 10px; transition: transform 0.3s; font-size: 10px; color: #b48c3b;
+}
+.feedback-main-label.open .arrow { transform: rotate(180deg); }
+
+.checkbox-dropdown {
+    border: 1px solid #c7e6df; border-radius: 10px;
+    padding: 0 14px; background: white;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    border-color: transparent;
+}
+.checkbox-dropdown.show {
+    max-height: 400px; 
+    padding: 15px 14px;
+    border-color: #c7e6df;
 }
 
-.field-block label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: var(--muted);
-  font-weight: 500;
+
+/* --- ENHANCED PILL-SHAPED FEEDBACK OPTIONS --- (NO CHANGES HERE) */
+
+/* 1. Hide the actual checkbox */
+.checkbox-item input[type="checkbox"] {
+    position: absolute; 
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none; 
 }
 
-.input-field {
-  width: 100%;
-  padding: 14px 16px;
-  font-size: 15px;
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  background: #fff;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  outline: none;
-  color: var(--text);
-  font-weight: 400;
-}
-
-.input-field:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 12px rgba(198, 165, 89, 0.5);
-  background: #fff;
-}
-
-textarea.input-field {
-  resize: vertical;
-  min-height: 110px;
-}
-
-select.input-field {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg fill='%236b7a8f' height='20' width='20' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 42px;
-  color: var(--text);
-}
-
-button {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  background: var(--gold);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s, transform 0.1s;
-  box-shadow: 0 4px 10px rgba(198, 165, 89, 0.4);
-}
-
-button:hover {
-  background: var(--gold-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(161, 127, 42, 0.6);
-}
-
-.success-msg {
-  margin-top: 18px;
-  font-size: 14px;
-  color: #3a7a1f;
-  display: none;
-}
-
-.note {
-  margin-top: 12px;
-  font-size: 12px;
-  color: var(--muted);
-  font-style: italic;
-}
-
-/* Tablet View (768px - 1024px) */
-@media (max-width: 1024px) {
-  .form-card {
-    width: 90%;
-    padding: 35px 25px;
-  }
-  .form-title {
-    font-size: 26px;
-  }
-  .input-field {
+/* Ensure the checkbox-item (the label wrapper) behaves correctly */
+.checkbox-item { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 12px; 
+    cursor: pointer;
     font-size: 15px;
-    padding: 12px 14px;
-  }
-  button {
+    color: #555;
+    transition: all 0.2s ease;
+}
+.checkbox-item:last-child { margin-bottom: 0; }
+
+/* 2. Style the SPAN (the text itself) to look like a pill-shaped button */
+.checkbox-item span {
+    display: block; 
+    padding: 10px 18px; 
+    border: 1px solid #c7e6df; 
+    border-radius: 25px; 
+    background-color: white; 
+    color: #555; 
     font-size: 15px;
-    padding: 13px;
-  }
+    font-weight: 400; 
+    cursor: pointer;
+    text-align: left; 
+    transition: all 0.25s ease; 
+    flex-grow: 1; 
 }
 
-/* Mobile View (<768px) */
-@media (max-width: 767px) {
-  .form-card {
-    width: 95%;
-    padding: 30px 20px;
-  }
-  .form-title {
-    font-size: 24px;
-    text-align: center;
-  }
-  .input-field {
+/* 3. Hover state for the pill */
+.checkbox-item span:hover {
+    border-color: #b48c3b; 
+    color: #b48c3b; 
+    box-shadow: 0 2px 8px rgba(180, 140, 59, 0.1); 
+}
+
+/* 4. Selected state for the pill (when checkbox is checked) */
+.checkbox-item input[type="checkbox"]:checked + span {
+    border-color: #b48c3b; 
+    background-color: #fdf6eb; 
+    color: #b48c3b; 
+    font-weight: 600; 
+    box-shadow: 0 4px 12px rgba(180, 140, 59, 0.2); 
+    transform: translateY(-1px); 
+}
+
+/* Style for the 'Others' text input */
+#othersInput {
+    width: 100%; 
+    padding: 10px 14px; 
+    margin-top: 8px; margin-bottom: 5px;
+    border: 1px solid #c7e6df; 
+    background: #fdfdfd;
     font-size: 14px;
-    padding: 12px;
-  }
-  button {
-    font-size: 15px;
-    padding: 12px;
-  }
+    border-radius: 10px; 
+    /* The display property is controlled by JS, but keeping style clean */
+}
+
+/* Button & Messages */
+button {
+    width: 100%; padding: 14px; background: #b48c3b; border: none; border-radius: 10px;
+    color: white; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.3s;
+}
+button:hover { background: #a37c30; }
+
+.note { font-size: 12px; margin-top: 12px; color: #555; text-align: center; }
+.success-msg {
+    display: none; padding: 15px; background: #4CAF50; color: white;
+    border-radius: 10px; text-align: center; font-weight: 500; margin-top: 15px;
+}
+#hidden_iframe { display: none; }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; gap: 20px; }
+    .hero { min-height: 250px; }
+    .header-center h1 { font-size: 20px; }
+}
+@media (max-width: 600px) {
+    .form-container { padding: 25px 20px; }
+    .row { flex-direction: column; gap: 0; } 
 }
