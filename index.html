@@ -3,85 +3,331 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sruthilaya — Enquiry Form</title>
+    <title>Sruthilaya — Tell Us More</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* General Reset & Body */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #faf9f7; color: #333; line-height: 1.6; }
+
+        /* Layout */
+        .wrapper { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        .header-center { text-align: center; margin-bottom: 25px; }
+        .header-center img { height: 100px; margin-bottom: 5px; }
+        .header-center h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px; color: #b48c3b; font-weight: 700;
+        }
+
+        /* Grid Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr; 
+            gap: 30px;
+        }
+
+        /* Hero Section (Keep dummy image src for single file) */
+        .hero {
+            background-color: #dff7f2; 
+            border-radius: 20px;
+            min-height: 650px; 
+            position: relative;
+            overflow: hidden;
+        }
+        .hero img {
+            display: block; width: 100%; height: 100%;
+            object-fit: cover; border-radius: 20px;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: #e7faf5;
+            border-radius: 20px;
+            padding: 30px 35px;
+        }
+
+        /* Input Fields (Floating Label Group) */
+        form .input-group { position: relative; margin-bottom: 22px; }
+
+        form input, form textarea, form select { 
+            width: 100%; padding: 14px 14px; border-radius: 10px; border: 1px solid #c7e6df;
+            background: white; font-size: 15px; font-family: 'Poppins', sans-serif; outline: none;
+            appearance: none;
+        }
+        form textarea { height: 110px; resize: none; }
+
+        /* Specific selector for Floating Labels to ignore checkboxes */
+        .input-group label {
+            position: absolute; left: 14px; top: 14px; font-size: 14px; color: #666;
+            transition: 0.25s ease; pointer-events: none;
+        }
+
+        /* Floating Label Action - Updated to remove :valid from inputs/textareas that are now optional */
+        input:focus + label, textarea:focus + label, 
+        select:focus + label, /* Added select:focus + label for optional select */
+        input:not(:placeholder-shown) + label, /* Changed to only require not(:placeholder-shown) for optional fields */
+        textarea:not(:placeholder-shown) + label, /* Changed to only require not(:placeholder-shown) for optional fields */
+        select:valid + label { /* Kept :valid for country selection since it's still required */
+            top: -10px; left: 10px; background: #e7faf5; padding: 0 6px; font-size: 12px; color: #b48c3b;
+        }
+
+        /* Select Arrow */
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '▼'; position: absolute; right: 15px; top: 50%;
+            transform: translateY(-50%); font-size: 10px; color: #b48c3b; pointer-events: none;
+        }
+
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+
+        /* --- FEEDBACK SECTION STYLES (NO CHANGES HERE) --- */
+        .feedback-group { margin-bottom: 25px; position: relative; }
+        .feedback-main-label {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 14px; border-radius: 10px; border: 1px solid #c7e6df;
+            background: white; font-size: 15px; font-weight: 500; color: #666;
+            cursor: pointer; margin-bottom: 10px; transition: background 0.3s;
+        }
+        .feedback-main-label:hover { background: #f0f8f7; }
+        .feedback-main-label .arrow {
+            margin-left: 10px; transition: transform 0.3s; font-size: 10px; color: #b48c3b;
+        }
+        .feedback-main-label.open .arrow { transform: rotate(180deg); }
+        .checkbox-dropdown {
+            border: 1px solid #c7e6df; border-radius: 10px;
+            padding: 0 14px; background: white;
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+            border-color: transparent;
+        }
+        .checkbox-dropdown.show {
+            max-height: 400px; 
+            padding: 15px 14px;
+            border-color: #c7e6df;
+        }
+
+        /* --- ENHANCED PILL-SHAPED FEEDBACK OPTIONS (NO CHANGES HERE) --- */
+        /* 1. Hide the actual checkbox */
+        .checkbox-item input[type="checkbox"] {
+            position: absolute; 
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none; 
+        }
+
+        /* Ensure the checkbox-item (the label wrapper) behaves correctly */
+        .checkbox-item { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 12px; 
+            cursor: pointer;
+            font-size: 15px;
+            color: #555;
+            transition: all 0.2s ease;
+        }
+        .checkbox-item:last-child { margin-bottom: 0; }
+
+        /* 2. Style the SPAN (the text itself) to look like a pill-shaped button */
+        .checkbox-item span {
+            display: block; 
+            padding: 10px 18px; 
+            border: 1px solid #c7e6df; 
+            border-radius: 25px; 
+            background-color: white; 
+            color: #555; 
+            font-size: 15px;
+            font-weight: 400; 
+            cursor: pointer;
+            text-align: left; 
+            transition: all 0.25s ease; 
+            flex-grow: 1; 
+        }
+
+        /* 3. Hover state for the pill */
+        .checkbox-item span:hover {
+            border-color: #b48c3b; 
+            color: #b48c3b; 
+            box-shadow: 0 2px 8px rgba(180, 140, 59, 0.1); 
+        }
+
+        /* 4. Selected state for the pill (when checkbox is checked) */
+        .checkbox-item input[type="checkbox"]:checked + span {
+            border-color: #b48c3b; 
+            background-color: #fdf6eb; 
+            color: #b48c3b; 
+            font-weight: 600; 
+            box-shadow: 0 4px 12px rgba(180, 140, 59, 0.2); 
+            transform: translateY(-1px); 
+        }
+
+        /* Style for the 'Others' text input */
+        #othersInput {
+            width: 100%; 
+            padding: 10px 14px; 
+            margin-top: 8px; margin-bottom: 5px;
+            border: 1px solid #c7e6df; 
+            background: #fdfdfd;
+            font-size: 14px;
+            border-radius: 10px; 
+        }
+
+        /* Button & Messages */
+        button {
+            width: 100%; padding: 14px; background: #b48c3b; border: none; border-radius: 10px;
+            color: white; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.3s;
+        }
+        button:hover { background: #a37c30; }
+        button:disabled { background: #cccccc; cursor: not-allowed; } /* Added disabled style */
+
+        .note { font-size: 12px; margin-top: 12px; color: #555; text-align: center; }
+        .success-msg {
+            display: none; padding: 15px; background: #4CAF50; color: white;
+            border-radius: 10px; text-align: center; font-weight: 500; margin-top: 15px;
+        }
+        #hidden_iframe { display: none; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 20px; }
+            .hero { min-height: 250px; }
+            .header-center h1 { font-size: 20px; }
+        }
+        @media (max-width: 600px) {
+            .form-container { padding: 25px 20px; }
+            .row { flex-direction: column; gap: 0; } 
+        }
+    </style>
 </head>
 
 <body>
-<div class="wrapper">
-    
-    <div class="layout">
+    <div class="wrapper">
+        <div class="layout">
+            <section class="hero">
+                <img src="left.png" alt="Beautiful Sruthilaya Jewellery" />
+            </section>
 
-        <section class="hero">
-            <img src="left.png" alt="Beautiful Sruthilaya Jewellery" />
-        </section>
-
-        <section class="form-container">
-            <form id="leadForm" action="YOUR_DEPLOYED_WEB_APP_URL" method="POST" target="hidden_iframe">
-                <div id="formContent">
-                    <div class="header-center">
-                        <img src="logo.png" alt="Sruthilaya Logo" />
-                        <h1>Your Voice Shapes Sruthilaya — Tell Us More</h1>
-                    </div>
-                
-                    <div class="input-group">
-                        <input id="name" name="Full_Name" type="text" required placeholder=" ">
-                        <label for="name">Full Name*</label>
-                    </div>
-
-                    <div class="row">
-                        <div class="col input-group">
-                            <input id="email" name="Email" type="email" placeholder=" ">
-                            <label for="email">Email</label>
+            <section class="form-container">
+                <form id="leadForm" action="https://script.google.com/macros/s/AKfycby6VlH4Dsa89avGyv1IC1bmqNbsNV2dEwX1ha63-hi3TCPe7jQUw2zHdpV00jPSj1Rb/exec" method="POST" target="hidden_iframe">
+                    <div id="formContent">
+                        <div class="header-center">
+                            <img src="logo.png" alt="Sruthilaya Logo" />
+                            <h1>Your Voice Shapes Sruthilaya — Tell Us More</h1>
                         </div>
-                        <div class="col input-group select-wrapper">
-                            <select id="country" name="Country" required>
-                                <option value="" hidden></option> 
-                                <option value="India">India</option>
-                                <option value="USA">United States</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="Europe">Europe</option>
-                                <option value="UAE">UAE</option>
-                                <option value="Qutar">Qutar</option>
-                                <option value="Australia">Australia</option> <option value="Other">Other</option>
-                            </select>
-                            <label for="country">Country / Region*</label>
+                    
+                        <div class="input-group">
+                            <input id="name" name="Full_Name" type="text" required placeholder=" ">
+                            <label for="name">Full Name*</label>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col input-group">
-                            <input id="phone" name="Phone_Number" type="tel" required placeholder=" ">
-                            <label for="phone">Phone Number*</label>
+                        <div class="row">
+                            <div class="col input-group">
+                                <input id="email" name="Email" type="email" placeholder=" ">
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="col input-group select-wrapper">
+                                <select id="country" name="Country" required>
+                                    <option value="" hidden></option> 
+                                    <option value="India">India</option>
+                                    <option value="USA">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="Europe">Europe</option>
+                                    <option value="UAE">UAE</option>
+                                    <option value="Qutar">Qutar</option>
+                                    <option value="Australia">Australia</option> 
+                                    <option value="Other">Other</option>
+                                </select>
+                                <label for="country">Country / Region*</label>
+                            </div>
                         </div>
-                        <div class="col input-group select-wrapper">
-                            <select id="subject" name="Product_Interest">
-                                <option value="" hidden></option> 
-                                <option value="Gemstones Love">Gemstones Love</option>
-                                <option value="Craftsmanship">Craftsmanship</option>
-                                <option value="Story behind the masterpieces">Story behind the masterpieces</option>
-                                <option value="Bespoke Design">Bespoke Design</option>
-                            </select>
-                            <label for="subject">What caught your eye?</label>
-                        </div>
-                    </div>
 
-                    <div class="input-group">
-                        <textarea id="message" name="Requirement_Message" placeholder=" "></textarea>
-                        <label for="message">Your Requirement / Additional Message</label>
-                    </div>
-                </div> 
-                
-                <button id="submitBtn" type="submit">Submit Enquiry</button>
-                <p id="successMsg" class="success-msg">✅ Thank you! Your enquiry has been sent. The form will reload shortly.</p>
-                <p class="note">By submitting, you agree to share these details with Sruthilaya Fine Jewellery.</p>
-            </form>
-        </section>
+                        <div class="row">
+                            <div class="col input-group">
+                                <input id="phone" name="Phone_Number" type="tel" required placeholder=" ">
+                                <label for="phone">Phone Number*</label>
+                            </div>
+                            <div class="col input-group select-wrapper">
+                                <select id="subject" name="Product_Interest">
+                                    <option value="" hidden></option> 
+                                    <option value="Gemstones Love">Gemstones Love</option>
+                                    <option value="Craftsmanship">Craftsmanship</option>
+                                    <option value="Story behind the masterpieces">Story behind the masterpieces</option>
+                                    <option value="Bespoke Design">Bespoke Design</option>
+                                </select>
+                                <label for="subject">What caught your eye?</label>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <textarea id="message" name="Requirement_Message" placeholder=" "></textarea>
+                            <label for="message">Your Requirement / Additional Message</label>
+                        </div>
+                    </div> 
+                    
+                    <button id="submitBtn" type="submit">Submit Enquiry</button>
+                    <p id="successMsg" class="success-msg">✅ Thank you! Your enquiry has been sent.</p>
+                    <p class="note">By submitting, you agree to share these details with Sruthilaya Fine Jewellery.</p>
+                </form>
+            </section>
+        </div>
     </div>
-</div>
 
-<iframe id="hidden_iframe" name="hidden_iframe"></iframe>
-<script src="script.js"></script>
+    <iframe id="hidden_iframe" name="hidden_iframe"></iframe>
+
+    <script>
+        let submitted = false;
+        const RELOAD_DELAY = 4000; 
+
+        // --- Form Submission Handler (Reloads on success) ---
+        // This function runs when the hidden iframe finishes loading the Google Sheet response.
+        document.getElementById('hidden_iframe').onload = function() {
+            if (submitted) {
+                const formContent = document.getElementById('formContent');
+                const submitBtn = document.getElementById('submitBtn');
+                const successMsg = document.getElementById('successMsg');
+                
+                // Hide form elements and show success message
+                formContent.style.display = 'none'; 
+                submitBtn.style.display = 'none';
+                successMsg.style.display = 'block'; 
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Wait for 4 seconds then reload the page
+                setTimeout(() => {
+                    submitted = false;
+                    window.location.reload(); 
+                }, RELOAD_DELAY); 
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('leadForm');
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const countrySelect = document.getElementById('country');
+
+            // 1. Form Submission Listener
+            form.addEventListener('submit', function (e) {
+                
+                // Manually check the mandatory fields (Full Name, Phone Number, Country)
+                if (!nameInput.value || !phoneInput.value || !countrySelect.value) {
+                    // The `required` attribute on the inputs handles the visual feedback
+                    // This block ensures JS doesn't proceed if the browser validation is bypassed/not supported
+                    e.preventDefault();
+                    return; 
+                }
+
+                // Set the flag and update button appearance
+                submitted = true;
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.textContent = 'Sending...';
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
 </body>
 </html>
