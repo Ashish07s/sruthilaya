@@ -26,7 +26,7 @@ body {
 /* LEFT IMAGE PANEL */
 .left-image {
     flex: 1;
-    background: url("2.webp") center/cover no-repeat;
+    background: url("left-image.webp") center/cover no-repeat;
 }
 
 /* RIGHT FORM PANEL */
@@ -113,7 +113,8 @@ button:hover {
         <form id="leadForm"
               action="https://script.google.com/macros/s/AKfycby6VlH4Dsa89avGyv1IC1bmqNbsNV2dEwX1ha63-hi3TCPe7jQUw2zHdpV00jPSj1Rb/exec"
               method="POST"
-              target="hidden_iframe">
+              target="hidden_iframe"
+              onsubmit="handleSubmit()">
 
             <div class="input-group">
                 <input name="Full_Name" type="text" placeholder="Your Name *" required>
@@ -127,9 +128,11 @@ button:hover {
                 <textarea name="Requirement_Message" placeholder="Your Reflections of the Afternoon"></textarea>
             </div>
 
-            <button type="submit">Submit Enquiry</button>
+            <button type="submit" id="submitBtn">Submit Enquiry</button>
 
-            <p class="success-msg">✅ Thank you! Your enquiry has been sent.</p>
+            <p class="success-msg" id="successMsg">
+                ✅ Thank you! Your enquiry has been sent.
+            </p>
 
             <p class="note">
                 By submitting, you agree to share these details with <br>
@@ -144,16 +147,24 @@ button:hover {
 
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
+<script>
+function handleSubmit() {
+    const btn = document.getElementById("submitBtn");
+    const msg = document.getElementById("successMsg");
+
+    // Disable button & change color
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+
+    // Show success message after submit
+    setTimeout(() => {
+        msg.style.display = "block";
+        document.getElementById("leadForm").reset();
+        btn.innerText = "Submit Enquiry";
+        btn.disabled = false;
+    }, 2000);
+}
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
