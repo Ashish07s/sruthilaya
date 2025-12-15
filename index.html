@@ -111,36 +111,37 @@ button:hover {
     <section class="form-container">
 
         <form id="leadForm"
-              action="https://script.google.com/macros/s/AKfycby6VlH4Dsa89avGyv1IC1bmqNbsNV2dEwX1ha63-hi3TCPe7jQUw2zHdpV00jPSj1Rb/exec"
-              method="POST"
-              target="hidden_iframe"
-              onsubmit="handleSubmit()">
-
-            <div class="input-group">
-                <input name="Full_Name" type="text" placeholder="Your Name *" required>
-            </div>
-
-            <div class="input-group">
-                <input name="Phone_Number" type="tel" placeholder="Your Calling Card (Number) *" required>
-            </div>
-
-            <div class="input-group">
-                <textarea name="Requirement_Message" placeholder="Your Reflections of the Afternoon"></textarea>
-            </div>
-
-            <button type="submit" id="submitBtn">Submit Enquiry</button>
-
-            <p class="success-msg" id="successMsg">
-                ✅ Thank you! Your enquiry has been sent.
-            </p>
-
-            <p class="note">
-                By submitting, you agree to share these details with <br>
-                Sruthilaya Fine Jewellery.
-            </p>
-
-        </form>
-
+        action="https://script.google.com/macros/s/AKfycby6VlH4Dsa89avGyv1IC1bmqNbsNV2dEwX1ha63-hi3TCPe7jQUw2zHdpV00jPSj1Rb/exec"
+        method="POST"
+        target="hidden_iframe"
+        onsubmit="handleSubmit()">
+  
+  
+<div id="formFields">
+  
+          <div class="input-group">
+              <input name="Full_Name" type="text" placeholder="Your Name *" required>
+          </div>
+  
+          <div class="input-group">
+              <input name="Phone_Number" type="tel" placeholder="Your Calling Card (Number) *" required>
+          </div>
+  
+          <div class="input-group">
+              <textarea name="Requirement_Message" placeholder="Your Reflections of the Afternoon"></textarea>
+          </div>
+  
+          <button type="submit" id="submitBtn">Submit</button>
+  
+          <p class="note">
+              By submitting, you agree to share these details with <br>
+              Sruthilaya Fine Jewellery.
+          </p>
+  
+      </div>
+  
+  </form>
+  
     </section>
 
 </div>
@@ -148,23 +149,30 @@ button:hover {
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-function handleSubmit() {
-    const btn = document.getElementById("submitBtn");
-    const msg = document.getElementById("successMsg");
-
-    // Disable button & change color
-    btn.disabled = true;
-    btn.innerText = "Submitting...";
-
-    // Show success message after submit
-    setTimeout(() => {
-        msg.style.display = "block";
-        document.getElementById("leadForm").reset();
-        btn.innerText = "Submit Enquiry";
-        btn.disabled = false;
-    }, 2000);
-}
-</script>
-
+    function handleSubmit() {
+        const btn = document.getElementById("submitBtn");
+    
+        // Disable button
+        btn.disabled = true;
+    
+        // Submitting state
+        btn.innerText = "Submitting...";
+        btn.style.color = "#fff";            // keep white initially
+        btn.style.background = "#c7a060";    // original color
+    
+        // Thank you state (GREEN)
+        setTimeout(() => {
+            btn.innerText = "Thank you for submit";
+            btn.style.background = "#2ecc71"; // green background
+            btn.style.color = "#fff";
+        }, 1200);
+    
+        // Refresh after 3 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    }
+    </script>
+                
 </body>
 </html>
